@@ -1,0 +1,10 @@
+# ninja log v5
+1	9460	1758079216213491000	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/group_points.o	be6eb68179bbc217
+2	9478	1758079216225490500	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/interpolate.o	627cacf8c1fd1db
+3	9494	1758079216245489700	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/sampling.o	d80769ee3c1a7cd4
+0	9758	1758079216513478700	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/ball_query.o	475ad368a450a9c3
+3	22842	1758079229584942300	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/pointnet2_api.o	32a6b87dbdb210f6
+0	26790	1758079233548779700	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/ball_query_gpu.o	21cf341c1286428c
+1	26797	1758079233548779700	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/group_points_gpu.o	f522e1e4c42e2a7e
+2	27077	1758079233836767800	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/interpolate_gpu.o	61e66c026f4617e9
+3	27775	1758079234532739300	/media/wd/work/REArtGS/utils/pointnet_lib/build/temp.linux-x86_64-3.8/src/sampling_gpu.o	8099e686a4a21631

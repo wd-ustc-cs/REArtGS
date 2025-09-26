@@ -62,7 +62,6 @@ Fast train script:</summary>
 ```sh
 python efficient_train_recon.py -s <source_path> -m <model_save_path>/s1 --iterations 30000  --eval --init_num
 ```
---init_num means using fewer points for initialization
 </details>
 
 

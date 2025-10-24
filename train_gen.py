@@ -119,8 +119,8 @@ class GUI:
         self.one_stage_xyz = self.gaussians.get_xyz.detach().cpu().clone()
         self.gaussians.use_canonical = dataset.use_canonical
         self.art_model = ArtModel(dataset, joint_type = args.joint_type)
-
-        self.art_model.train_setting(self.opt)
+        self.init_deform()
+        #self.art_model.train_setting(self.opt)
 
         self.trainCameras = self.scene.getTrainCameras().copy()
         self.testCameras = self.scene.getTestCameras().copy()
@@ -174,6 +174,50 @@ class GUI:
         else:
             print('Init center randomly.')
 
+    @torch.no_grad()
+    def init_deform(self, center_init=='kmeans'):
+        if center_init=='kmeans':
+            from sklearn.cluster import SpectralClustering
+            import torch.nn as nn
+            cluster = SpectralClustering(self.art_model.deform.num_slots, eigen_solver='amg', affinity='nearest_neighbors', assign_labels='discretize', random_state=0)
+            #cluster = SpectralClustering(self.art_model.deform.num_slots, assign_labels='kmeans', random_state=0)
+            labels = cluster.fit_predict(self.gaussians.one_stage_xyz)
+            centers = np.array([self.gaussians.one_stage_xyz[labels == i].mean(0) for i in range(self.art_model.deform.num_slots)])
+
+            dist = (self.gaussians.one_stage_xyz - centers[labels])  # [N, 3]
+            mask = np.zeros([dist.shape[0], self.art_model.deform.num_slots])
+            mask[np.arange(dist.shape[0]), labels] = 1
+            dist_max = (np.linalg.norm(dist, axis=-1)[:, None] * mask).max(0)[:, None] / 2  # [K, 1]
+            centers = torch.from_numpy(centers).float().to('cuda')
+            dist_max = torch.from_numpy(dist_max).float().to('cuda')
+
+
+            self.art_model.deform.seg_model.logscale = nn.Parameter(torch.log(dist_max.repeat(1, 3)))
+
+            self.art_model.deform.seg_model.center = nn.Parameter(centers)
+        
+        if self.args.center_init == 'cgs':
+            #p = args.source_path.replace('data/', 'outputs/')
+            p = args.source_path.replace('ArtGS_data/', 'REArtGS2/outputs/')
+            coarse_name = self.args.coarse_name
+            center, scale = self.deform.deform.seg_model.init_from_file(
+                f'{p}/{coarse_name}/point_cloud/iteration_10000/center_info.npy')
+
+            print('Init center from coarse gaussian.')
+        elif self.args.center_init == 'pcd':
+            center, scale = self.deform.deform.seg_model.init_from_file(f'{self.args.source_path}/center_info.npy')
+            print('Init center from pcd.')
+        else:
+            print('Init center randomly.')
+        self.deform.load_weights(self.dataset.model_path, iteration=-1)
+        # joints = torch.randn_like(self.deform.deform.joints) * 1e-5
+        # joints[:, 0] = 1
+        #
+        # self.deform.deform.joints[0] = joints[0]
+        # self.deform.deform.joints[2] = joints[2]
+
+        self.deform.train_setting(self.opt)
+    
     @torch.no_grad()
     def training_report(self, tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_iterations, scene: Scene, renderFunc,
                         renderArgs, load2gpu_on_the_fly):

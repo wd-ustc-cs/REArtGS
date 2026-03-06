@@ -1,3 +1,5 @@
+# 📢 [We release REArtGS++ : a more general method for articulated object modeling](https://github.com/wd-ustc-cs/REArtGS2)
+
 <p align="center">
 
   <h1 align="center">REArtGS: Reconstructing and Generating Articulated Objects via 3D Gaussian Splatting with Geometric and Motion Constraints

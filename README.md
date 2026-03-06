@@ -1,4 +1,4 @@
-# 📢 [We release REArtGS++ : a more general method for articulated object modeling](https://github.com/wd-ustc-cs/REArtGS2)
+# 📢 [We have released REArtGS++ : a more general method for articulated object modeling](https://github.com/wd-ustc-cs/REArtGS2)
 
 <p align="center">
 
